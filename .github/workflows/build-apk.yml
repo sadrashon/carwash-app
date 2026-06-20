@@ -9,10 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
 
@@ -22,11 +22,11 @@ jobs:
       - name: Setup Expo and EAS
         run: |
           npm install -g eas-cli
-          echo "${{ secrets.EXPO_TOKEN }}" > token.txt
-          eas login --token $(cat token.txt)
+          # لاگین کردن به اکسپو با استفاده از توکن ذخیره شده در Secrets
+          eas login --non-interactive --token ${{ secrets.EXPO_TOKEN }}
 
       - name: Build APK with EAS
-        run: eas build -p android --profile preview --non-interactive
+        run: eas build -p android --profile preview --non-interactive --no-wait
 
       - name: Upload APK to GitHub
         uses: actions/upload-artifact@v4
