@@ -19,18 +19,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Setup Expo and EAS
+      - name: Setup EAS and Build APK
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
         run: |
           npm install -g eas-cli
-          # لاگین کردن به اکسپو با استفاده از توکن ذخیره شده در Secrets
-          eas login --non-interactive --token ${{ secrets.EXPO_TOKEN }}
-
-      - name: Build APK with EAS
-        run: eas build -p android --profile preview --non-interactive --no-wait
-
-      - name: Upload APK to GitHub
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-release
-          path: |
-            **/*.apk
+          eas build -p android --profile preview --non-interactive
